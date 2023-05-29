@@ -1,0 +1,20 @@
+{
+  "applications": "*",
+  "changelogDate": "20230529174408",
+  "clientRootFolder": "Order",
+  "databaseType": "sql",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "cliente",
+  "fields": [],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "microserviceName": "Order",
+  "name": "Cliente",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "searchEngine": "elasticsearch",
+  "service": "serviceClass",
+  "skipClient": true
+}

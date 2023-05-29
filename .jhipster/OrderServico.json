@@ -1,0 +1,54 @@
+{
+  "applications": "*",
+  "changelogDate": "20230529174410",
+  "clientRootFolder": "Order",
+  "databaseType": "sql",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "order_servico",
+  "fields": [
+    {
+      "fieldName": "dataAbertura",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "dataFechamento",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "prioridade",
+      "fieldType": "Prioridade",
+      "fieldValues": "BAIXA,MEDIA,ALTA"
+    },
+    {
+      "fieldName": "observacoes",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "Status",
+      "fieldValues": "ABERTO,EMANDAMENTO,ENCERRADO"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "microserviceName": "Order",
+  "name": "OrderServico",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "tecnico",
+      "relationshipName": "tecnico",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "cliente",
+      "relationshipName": "cliente",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "elasticsearch",
+  "service": "serviceClass",
+  "skipClient": true
+}

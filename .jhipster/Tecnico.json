@@ -1,0 +1,20 @@
+{
+  "applications": "*",
+  "changelogDate": "20230529174409",
+  "clientRootFolder": "Order",
+  "databaseType": "sql",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "tecnico",
+  "fields": [],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "microserviceName": "Order",
+  "name": "Tecnico",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "searchEngine": "elasticsearch",
+  "service": "serviceClass",
+  "skipClient": true
+}
