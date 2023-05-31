@@ -5,15 +5,15 @@ import br.com.rodrigoproject.repository.ClienteRepository;
 import br.com.rodrigoproject.repository.search.ClienteSearchRepository;
 import br.com.rodrigoproject.service.dto.ClienteDTO;
 import br.com.rodrigoproject.service.mapper.ClienteMapper;
+import br.com.rodrigoproject.web.rest.errors.BadRequestAlertException;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link Cliente}.
@@ -49,8 +49,7 @@ public class ClienteService {
     public ClienteDTO save(ClienteDTO clienteDTO) {
         log.debug("Request to save Cliente : {}", clienteDTO);
 
-        //Remove os caracteres do CPF
-        clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[^0-9]", ""));
+        validaCpf(clienteDTO);
 
         //Pega a data e hora atual e salva.
         clienteDTO.setDataCriacao(LocalDateTime.now());
@@ -70,11 +69,41 @@ public class ClienteService {
      */
     public ClienteDTO update(ClienteDTO clienteDTO) {
         log.debug("Request to update Cliente : {}", clienteDTO);
+        ClienteDTO findCliente = findOne(clienteDTO.getId());
+
+        validaCpf(clienteDTO, findCliente);
+
+        clienteDTO.setId(findCliente.getId());
+        clienteDTO.setDataCriacao(findCliente.getDataCriacao());
+
         Cliente cliente = clienteMapper.toEntity(clienteDTO);
-        // no save call needed as we have no fields that can be updated
+        cliente = clienteRepository.save(cliente);
         ClienteDTO result = clienteMapper.toDto(cliente);
         clienteSearchRepository.index(cliente);
         return result;
+    }
+
+    private void validaCpf(ClienteDTO clienteDTO) {
+        //Remove os caracteres do CPF
+        clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[^0-9]", ""));
+
+        // Verifica se o CPF já existe na base de dados
+        if (cpfAlreadyExists(clienteDTO.getCpf())) {
+            throw new BadRequestAlertException("CLIENTE", "CPF existe na base de dados!", "400");
+        }
+    }
+
+    private void validaCpf(ClienteDTO clienteDTO, ClienteDTO findCliente) {
+        //Remove os caracteres do CPF
+        clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[^0-9]", ""));
+
+        if (!clienteDTO.getCpf().equals(findCliente.getCpf()) && cpfAlreadyExists(clienteDTO.getCpf())) {
+            throw new BadRequestAlertException("CLIENTE", "CPF existe na base de dados!", "400");
+        }
+    }
+
+    private boolean cpfAlreadyExists(String cpf) {
+        return clienteRepository.existsByCpf(cpf);
     }
 
     /**
@@ -121,9 +150,14 @@ public class ClienteService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<ClienteDTO> findOne(Long id) {
+    public ClienteDTO findOne(Long id) {
         log.debug("Request to get Cliente : {}", id);
-        return clienteRepository.findById(id).map(clienteMapper::toDto);
+        return clienteRepository
+            .findById(id)
+            .map(clienteMapper::toDto)
+            .orElseThrow(() -> {
+                throw new BadRequestAlertException("CLIENTE", "Cliente não encontrado!", "400");
+            });
     }
 
     /**

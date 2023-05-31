@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ClienteRepository extends JpaRepository<Cliente, Long> {}
+public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+    boolean existsByCpf(String cpf);
+}

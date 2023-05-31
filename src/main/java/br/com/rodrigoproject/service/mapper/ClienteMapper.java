@@ -12,9 +12,8 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring")
 @Component
 public interface ClienteMapper extends EntityMapper<ClienteDTO, Cliente> {
-
     @Override
-    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "id", source = "id")
     @Mapping(target = "nome", source = "nome")
     @Mapping(target = "cpf", source = "cpf")
     @Mapping(target = "telefone", source = "telefone")

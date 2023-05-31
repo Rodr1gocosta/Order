@@ -4,6 +4,12 @@ import br.com.rodrigoproject.repository.ClienteRepository;
 import br.com.rodrigoproject.service.ClienteService;
 import br.com.rodrigoproject.service.dto.ClienteDTO;
 import br.com.rodrigoproject.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.api.annotations.ParameterObject;
@@ -11,19 +17,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * REST controller for managing {@link br.com.rodrigoproject.domain.Cliente}.
@@ -81,7 +81,7 @@ public class ClienteResource {
     @PutMapping("/clientes/{id}")
     public ResponseEntity<ClienteDTO> updateCliente(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody ClienteDTO clienteDTO
+        @Valid @RequestBody ClienteDTO clienteDTO
     ) throws URISyntaxException {
         log.debug("REST request to update Cliente : {}, {}", id, clienteDTO);
         if (clienteDTO.getId() == null) {
@@ -161,8 +161,8 @@ public class ClienteResource {
     @GetMapping("/clientes/{id}")
     public ResponseEntity<ClienteDTO> getCliente(@PathVariable Long id) {
         log.debug("REST request to get Cliente : {}", id);
-        Optional<ClienteDTO> clienteDTO = clienteService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(clienteDTO);
+        ClienteDTO clienteDTO = clienteService.findOne(id);
+        return new ResponseEntity<>(clienteDTO, HttpStatus.OK);
     }
 
     /**
