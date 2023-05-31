@@ -1,13 +1,17 @@
 package br.com.rodrigoproject.domain;
 
 import br.com.rodrigoproject.domain.enumeration.Sexo;
-import java.io.Serializable;
-import java.time.ZonedDateTime;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CPF;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * A Pessoa.
@@ -27,12 +31,14 @@ public class Pessoa implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @NotNull
+    @NotBlank(message = "Campo NOME obrigatório!")
+    @NotNull(message = "NOME não deve ser nulo!")
     @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Pattern(regexp = "^\\d{3}\\x2E\\d{3}\\x2E\\d{3}\\x2D\\d{2}$")
-    @Column(name = "cpf")
+    @CPF
+    @Pattern(regexp = "\\d{11}", message = "CPF inválido")
+    @Column(name = "cpf", unique = true)
     private String cpf;
 
     @Column(name = "telefone")
@@ -45,7 +51,8 @@ public class Pessoa implements Serializable {
 
     @NotNull
     @Column(name = "data_criacao", nullable = false)
-    private ZonedDateTime dataCriacao;
+    @JsonFormat(pattern = "dd/MM/yyy HH:mm")
+    private LocalDateTime dataCriacao;
 
     @NotNull
     @Column(name = "ativo", nullable = false)
@@ -118,16 +125,16 @@ public class Pessoa implements Serializable {
         this.sexo = sexo;
     }
 
-    public ZonedDateTime getDataCriacao() {
+    public LocalDateTime getDataCriacao() {
         return this.dataCriacao;
     }
 
-    public Pessoa dataCriacao(ZonedDateTime dataCriacao) {
+    public Pessoa dataCriacao(LocalDateTime dataCriacao) {
         this.setDataCriacao(dataCriacao);
         return this;
     }
 
-    public void setDataCriacao(ZonedDateTime dataCriacao) {
+    public void setDataCriacao(LocalDateTime dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
 

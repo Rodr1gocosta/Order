@@ -1,30 +1,29 @@
 package br.com.rodrigoproject.web.rest;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
-
 import br.com.rodrigoproject.repository.ClienteRepository;
 import br.com.rodrigoproject.service.ClienteService;
 import br.com.rodrigoproject.service.dto.ClienteDTO;
 import br.com.rodrigoproject.web.rest.errors.BadRequestAlertException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
+
+import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * REST controller for managing {@link br.com.rodrigoproject.domain.Cliente}.
@@ -57,7 +56,7 @@ public class ClienteResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/clientes")
-    public ResponseEntity<ClienteDTO> createCliente(@RequestBody ClienteDTO clienteDTO) throws URISyntaxException {
+    public ResponseEntity<ClienteDTO> createCliente(@RequestBody @Valid ClienteDTO clienteDTO) throws URISyntaxException {
         log.debug("REST request to save Cliente : {}", clienteDTO);
         if (clienteDTO.getId() != null) {
             throw new BadRequestAlertException("A new cliente cannot already have an ID", ENTITY_NAME, "idexists");
@@ -146,7 +145,7 @@ public class ClienteResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of clientes in body.
      */
     @GetMapping("/clientes")
-    public ResponseEntity<List<ClienteDTO>> getAllClientes(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+    public ResponseEntity<List<ClienteDTO>> getAllClientes(@ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Clientes");
         Page<ClienteDTO> page = clienteService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);

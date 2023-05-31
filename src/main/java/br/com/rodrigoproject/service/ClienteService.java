@@ -1,19 +1,19 @@
 package br.com.rodrigoproject.service;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
-
 import br.com.rodrigoproject.domain.Cliente;
 import br.com.rodrigoproject.repository.ClienteRepository;
 import br.com.rodrigoproject.repository.search.ClienteSearchRepository;
 import br.com.rodrigoproject.service.dto.ClienteDTO;
 import br.com.rodrigoproject.service.mapper.ClienteMapper;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link Cliente}.
@@ -48,6 +48,13 @@ public class ClienteService {
      */
     public ClienteDTO save(ClienteDTO clienteDTO) {
         log.debug("Request to save Cliente : {}", clienteDTO);
+
+        //Remove os caracteres do CPF
+        clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[^0-9]", ""));
+
+        //Pega a data e hora atual e salva.
+        clienteDTO.setDataCriacao(LocalDateTime.now());
+
         Cliente cliente = clienteMapper.toEntity(clienteDTO);
         cliente = clienteRepository.save(cliente);
         ClienteDTO result = clienteMapper.toDto(cliente);

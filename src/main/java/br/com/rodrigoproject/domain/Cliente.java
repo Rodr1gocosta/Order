@@ -14,7 +14,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "cliente")
+@Table(name = "cliente", uniqueConstraints = @UniqueConstraint(columnNames = "cpf", name = "uk_cliente_cpf"))
 @Document(indexName = "cliente")
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class Cliente extends Pessoa implements Serializable {

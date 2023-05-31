@@ -24,12 +24,12 @@
             <column name="nome" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cpf" type="VARCHAR(255)"/>
+            <column name="cpf" type="VARCHAR(11)"/>
             <column name="telefone" type="VARCHAR(255)"/>
             <column name="sexo" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="data_criacao" type="timestamp with time zone">
+            <column name="data_criacao" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
             <column name="ativo" type="BOOLEAN">
