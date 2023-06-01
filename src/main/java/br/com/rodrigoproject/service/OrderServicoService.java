@@ -1,19 +1,21 @@
 package br.com.rodrigoproject.service;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
-
 import br.com.rodrigoproject.domain.OrderServico;
+import br.com.rodrigoproject.domain.enumeration.Status;
 import br.com.rodrigoproject.repository.OrderServicoRepository;
 import br.com.rodrigoproject.repository.search.OrderServicoSearchRepository;
 import br.com.rodrigoproject.service.dto.OrderServicoDTO;
 import br.com.rodrigoproject.service.mapper.OrderServicoMapper;
-import java.util.Optional;
+import br.com.rodrigoproject.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link OrderServico}.
@@ -48,6 +50,11 @@ public class OrderServicoService {
      */
     public OrderServicoDTO save(OrderServicoDTO orderServicoDTO) {
         log.debug("Request to save OrderServico : {}", orderServicoDTO);
+
+        //Pega a data e hora atual, status como aberto e salva.
+        orderServicoDTO.setDataAbertura(LocalDateTime.now());
+        orderServicoDTO.setStatus(Status.ABERTO);
+
         OrderServico orderServico = orderServicoMapper.toEntity(orderServicoDTO);
         orderServico = orderServicoRepository.save(orderServico);
         OrderServicoDTO result = orderServicoMapper.toDto(orderServico);
@@ -114,9 +121,14 @@ public class OrderServicoService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<OrderServicoDTO> findOne(Long id) {
+    public OrderServicoDTO findOne(Long id) {
         log.debug("Request to get OrderServico : {}", id);
-        return orderServicoRepository.findById(id).map(orderServicoMapper::toDto);
+        return orderServicoRepository
+            .findById(id)
+            .map(orderServicoMapper::toDto)
+            .orElseThrow(() -> {
+            throw new BadRequestAlertException("OS", "Ordem de serviço não encontrado!", "400");
+        });
     }
 
     /**

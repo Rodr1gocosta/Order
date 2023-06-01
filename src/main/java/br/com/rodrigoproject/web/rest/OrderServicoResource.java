@@ -1,17 +1,9 @@
 package br.com.rodrigoproject.web.rest;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
-
 import br.com.rodrigoproject.repository.OrderServicoRepository;
 import br.com.rodrigoproject.service.OrderServicoService;
 import br.com.rodrigoproject.service.dto.OrderServicoDTO;
 import br.com.rodrigoproject.web.rest.errors.BadRequestAlertException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +17,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
+
+import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * REST controller for managing {@link br.com.rodrigoproject.domain.OrderServico}.
@@ -57,11 +56,21 @@ public class OrderServicoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/order-servicos")
-    public ResponseEntity<OrderServicoDTO> createOrderServico(@RequestBody OrderServicoDTO orderServicoDTO) throws URISyntaxException {
+    public ResponseEntity<OrderServicoDTO> createOrderServico(@RequestBody @Valid OrderServicoDTO orderServicoDTO) throws URISyntaxException {
         log.debug("REST request to save OrderServico : {}", orderServicoDTO);
         if (orderServicoDTO.getId() != null) {
-            throw new BadRequestAlertException("A new orderServico cannot already have an ID", ENTITY_NAME, "idexists");
+            throw new BadRequestAlertException("Um novo OS não pode já ter um ID", ENTITY_NAME, "idexists");
         }
+        if (orderServicoDTO.getDataAbertura() != null) {
+            throw new BadRequestAlertException("Um novo OS não pode já ter um Data Abertura", ENTITY_NAME, "dataAberturaExists");
+        }
+        if (orderServicoDTO.getDataFechamento() != null) {
+            throw new BadRequestAlertException("Um novo OS não pode já ter um Data Fechamento", ENTITY_NAME, "dataFechamentoExists");
+        }
+        if (orderServicoDTO.getStatus() != null) {
+            throw new BadRequestAlertException("Um novo OS não pode já ter um Status", ENTITY_NAME, "dataStatusExists");
+        }
+
         OrderServicoDTO result = orderServicoService.save(orderServicoDTO);
         return ResponseEntity
             .created(new URI("/api/order-servicos/" + result.getId()))
@@ -162,8 +171,8 @@ public class OrderServicoResource {
     @GetMapping("/order-servicos/{id}")
     public ResponseEntity<OrderServicoDTO> getOrderServico(@PathVariable Long id) {
         log.debug("REST request to get OrderServico : {}", id);
-        Optional<OrderServicoDTO> orderServicoDTO = orderServicoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(orderServicoDTO);
+        OrderServicoDTO orderServicoDTO = orderServicoService.findOne(id);
+        return new ResponseEntity<>(orderServicoDTO, HttpStatus.OK);
     }
 
     /**

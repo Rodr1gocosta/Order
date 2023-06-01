@@ -16,7 +16,9 @@ import br.com.rodrigoproject.repository.search.OrderServicoSearchRepository;
 import br.com.rodrigoproject.service.dto.OrderServicoDTO;
 import br.com.rodrigoproject.service.mapper.OrderServicoMapper;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -46,11 +48,11 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class OrderServicoResourceIT {
 
-    private static final LocalDate DEFAULT_DATA_ABERTURA = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_DATA_ABERTURA = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDateTime DEFAULT_DATA_ABERTURA = LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC);
+    private static final LocalDateTime UPDATED_DATA_ABERTURA = LocalDateTime.now(ZoneId.systemDefault());
 
-    private static final LocalDate DEFAULT_DATA_FECHAMENTO = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_DATA_FECHAMENTO = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDateTime DEFAULT_DATA_FECHAMENTO = LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC);
+    private static final LocalDateTime UPDATED_DATA_FECHAMENTO = LocalDateTime.now(ZoneId.systemDefault());
 
     private static final Prioridade DEFAULT_PRIORIDADE = Prioridade.BAIXA;
     private static final Prioridade UPDATED_PRIORIDADE = Prioridade.MEDIA;

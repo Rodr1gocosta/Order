@@ -4,6 +4,7 @@ import br.com.rodrigoproject.domain.enumeration.Prioridade;
 import br.com.rodrigoproject.domain.enumeration.Status;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.*;
 
 /**
@@ -24,10 +25,10 @@ public class OrderServico implements Serializable {
     private Long id;
 
     @Column(name = "data_abertura")
-    private LocalDate dataAbertura;
+    private LocalDateTime dataAbertura;
 
     @Column(name = "data_fechamento")
-    private LocalDate dataFechamento;
+    private LocalDateTime dataFechamento;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "prioridade")
@@ -61,29 +62,29 @@ public class OrderServico implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getDataAbertura() {
+    public LocalDateTime getDataAbertura() {
         return this.dataAbertura;
     }
 
-    public OrderServico dataAbertura(LocalDate dataAbertura) {
+    public OrderServico dataAbertura(LocalDateTime dataAbertura) {
         this.setDataAbertura(dataAbertura);
         return this;
     }
 
-    public void setDataAbertura(LocalDate dataAbertura) {
+    public void setDataAbertura(LocalDateTime dataAbertura) {
         this.dataAbertura = dataAbertura;
     }
 
-    public LocalDate getDataFechamento() {
+    public LocalDateTime getDataFechamento() {
         return this.dataFechamento;
     }
 
-    public OrderServico dataFechamento(LocalDate dataFechamento) {
+    public OrderServico dataFechamento(LocalDateTime dataFechamento) {
         this.setDataFechamento(dataFechamento);
         return this;
     }
 
-    public void setDataFechamento(LocalDate dataFechamento) {
+    public void setDataFechamento(LocalDateTime dataFechamento) {
         this.dataFechamento = dataFechamento;
     }
 

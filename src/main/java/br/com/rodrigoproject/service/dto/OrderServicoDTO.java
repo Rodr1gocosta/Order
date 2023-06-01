@@ -2,8 +2,10 @@ package br.com.rodrigoproject.service.dto;
 
 import br.com.rodrigoproject.domain.enumeration.Prioridade;
 import br.com.rodrigoproject.domain.enumeration.Status;
+
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -14,9 +16,9 @@ public class OrderServicoDTO implements Serializable {
 
     private Long id;
 
-    private LocalDate dataAbertura;
+    private LocalDateTime dataAbertura;
 
-    private LocalDate dataFechamento;
+    private LocalDateTime dataFechamento;
 
     private Prioridade prioridade;
 
@@ -24,8 +26,10 @@ public class OrderServicoDTO implements Serializable {
 
     private Status status;
 
+    @NotNull
     private TecnicoDTO tecnico;
 
+    @NotNull
     private ClienteDTO cliente;
 
     public Long getId() {
@@ -36,19 +40,19 @@ public class OrderServicoDTO implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getDataAbertura() {
+    public LocalDateTime getDataAbertura() {
         return dataAbertura;
     }
 
-    public void setDataAbertura(LocalDate dataAbertura) {
+    public void setDataAbertura(LocalDateTime dataAbertura) {
         this.dataAbertura = dataAbertura;
     }
 
-    public LocalDate getDataFechamento() {
+    public LocalDateTime getDataFechamento() {
         return dataFechamento;
     }
 
-    public void setDataFechamento(LocalDate dataFechamento) {
+    public void setDataFechamento(LocalDateTime dataFechamento) {
         this.dataFechamento = dataFechamento;
     }
 

@@ -14,10 +14,10 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="data_abertura" type="date">
+            <column name="data_abertura" type="datetime">
                 <constraints nullable="true" />
             </column>
-            <column name="data_fechamento" type="date">
+            <column name="data_fechamento" type="datetime">
                 <constraints nullable="true" />
             </column>
             <column name="prioridade" type="varchar(255)">
@@ -56,8 +56,8 @@
                   tableName="order_servico"
                   usePreparedStatements="true">
             <column name="id" type="numeric"/>
-            <column name="data_abertura" type="date"/>
-            <column name="data_fechamento" type="date"/>
+            <column name="data_abertura" type="datetime"/>
+            <column name="data_fechamento" type="datetime"/>
             <column name="prioridade" type="string"/>
             <column name="observacoes" type="string"/>
             <column name="status" type="string"/>
