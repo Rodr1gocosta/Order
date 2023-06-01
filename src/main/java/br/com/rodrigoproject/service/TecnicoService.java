@@ -5,9 +5,14 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 import br.com.rodrigoproject.domain.Tecnico;
 import br.com.rodrigoproject.repository.TecnicoRepository;
 import br.com.rodrigoproject.repository.search.TecnicoSearchRepository;
+import br.com.rodrigoproject.service.dto.ClienteDTO;
 import br.com.rodrigoproject.service.dto.TecnicoDTO;
 import br.com.rodrigoproject.service.mapper.TecnicoMapper;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
+
+import br.com.rodrigoproject.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -48,6 +53,12 @@ public class TecnicoService {
      */
     public TecnicoDTO save(TecnicoDTO tecnicoDTO) {
         log.debug("Request to save Tecnico : {}", tecnicoDTO);
+
+        validaCpf(tecnicoDTO);
+
+        //Pega a data e hora atual e salva.
+        tecnicoDTO.setDataCriacao(LocalDateTime.now());
+
         Tecnico tecnico = tecnicoMapper.toEntity(tecnicoDTO);
         tecnico = tecnicoRepository.save(tecnico);
         TecnicoDTO result = tecnicoMapper.toDto(tecnico);
@@ -63,11 +74,42 @@ public class TecnicoService {
      */
     public TecnicoDTO update(TecnicoDTO tecnicoDTO) {
         log.debug("Request to update Tecnico : {}", tecnicoDTO);
+
+        TecnicoDTO findTecnico = findOne(tecnicoDTO.getId());
+
+        validaCpf(tecnicoDTO, findTecnico);
+
+        tecnicoDTO.setId(findTecnico.getId());
+        tecnicoDTO.setDataCriacao(findTecnico.getDataCriacao());
+
         Tecnico tecnico = tecnicoMapper.toEntity(tecnicoDTO);
-        // no save call needed as we have no fields that can be updated
+        tecnico = tecnicoRepository.save(tecnico);
         TecnicoDTO result = tecnicoMapper.toDto(tecnico);
         tecnicoSearchRepository.index(tecnico);
         return result;
+    }
+
+    private void validaCpf(TecnicoDTO tecnicoDTO) {
+        //Remove os caracteres do CPF
+        tecnicoDTO.setCpf(tecnicoDTO.getCpf().replaceAll("[^0-9]", ""));
+
+        // Verifica se o CPF já existe na base de dados
+        if (cpfAlreadyExists(tecnicoDTO.getCpf())) {
+            throw new BadRequestAlertException("TECNICO", "Tecnico", "CPF existe na base de dados!");
+        }
+    }
+
+    private void validaCpf(TecnicoDTO tecnicoDTO, TecnicoDTO findTecnico) {
+        //Remove os caracteres do CPF
+        tecnicoDTO.setCpf(tecnicoDTO.getCpf().replaceAll("[^0-9]", ""));
+
+        if (!tecnicoDTO.getCpf().equals(findTecnico.getCpf()) && cpfAlreadyExists(tecnicoDTO.getCpf())) {
+            throw new BadRequestAlertException("TECNICO", "Tecnico", "CPF existe na base de dados!");
+        }
+    }
+
+    private boolean cpfAlreadyExists(String cpf) {
+        return tecnicoRepository.existsByCpf(cpf);
     }
 
     /**
@@ -114,9 +156,14 @@ public class TecnicoService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<TecnicoDTO> findOne(Long id) {
+    public TecnicoDTO findOne(Long id) {
         log.debug("Request to get Tecnico : {}", id);
-        return tecnicoRepository.findById(id).map(tecnicoMapper::toDto);
+        return tecnicoRepository
+            .findById(id)
+            .map(tecnicoMapper::toDto)
+            .orElseThrow(() -> {
+            throw new BadRequestAlertException("TECNICO", "Tecnico", "Técnico não encontrado!");
+        });
     }
 
     /**

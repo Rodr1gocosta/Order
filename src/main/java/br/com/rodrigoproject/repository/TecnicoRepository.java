@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface TecnicoRepository extends JpaRepository<Tecnico, Long> {}
+public interface TecnicoRepository extends JpaRepository<Tecnico, Long> {
+    boolean existsByCpf(String cpf);
+}

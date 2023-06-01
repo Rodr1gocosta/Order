@@ -162,8 +162,8 @@ public class TecnicoResource {
     @GetMapping("/tecnicos/{id}")
     public ResponseEntity<TecnicoDTO> getTecnico(@PathVariable Long id) {
         log.debug("REST request to get Tecnico : {}", id);
-        Optional<TecnicoDTO> tecnicoDTO = tecnicoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(tecnicoDTO);
+        TecnicoDTO tecnicoDTO = tecnicoService.findOne(id);
+        return new ResponseEntity<>(tecnicoDTO, HttpStatus.OK);
     }
 
     /**

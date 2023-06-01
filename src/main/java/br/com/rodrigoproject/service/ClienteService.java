@@ -89,7 +89,7 @@ public class ClienteService {
 
         // Verifica se o CPF já existe na base de dados
         if (cpfAlreadyExists(clienteDTO.getCpf())) {
-            throw new BadRequestAlertException("CLIENTE", "CPF existe na base de dados!", "400");
+            throw new BadRequestAlertException("CLIENTE", "Cliente", "CPF existe na base de dados!");
         }
     }
 
@@ -98,7 +98,7 @@ public class ClienteService {
         clienteDTO.setCpf(clienteDTO.getCpf().replaceAll("[^0-9]", ""));
 
         if (!clienteDTO.getCpf().equals(findCliente.getCpf()) && cpfAlreadyExists(clienteDTO.getCpf())) {
-            throw new BadRequestAlertException("CLIENTE", "CPF existe na base de dados!", "400");
+            throw new BadRequestAlertException("CLIENTE", "Cliente", "CPF existe na base de dados!");
         }
     }
 
